@@ -1,0 +1,111 @@
+@import "tailwindcss";
+
+@theme {
+  --color-petroleo-50: #eef7f8;
+  --color-petroleo-100: #d5eaec;
+  --color-petroleo-200: #aed5d9;
+  --color-petroleo-300: #7dbac0;
+  --color-petroleo-400: #4d9aa3;
+  --color-petroleo-500: #2e7f89;
+  --color-petroleo-600: #1f6670;
+  --color-petroleo-700: #14525b;
+  --color-petroleo-800: #0f424a;
+  --color-petroleo-900: #0b343a;
+
+  --color-salvia-100: #eaf3ea;
+  --color-salvia-200: #d2e5d3;
+  --color-salvia-300: #a9cfae;
+  --color-salvia-400: #7db487;
+  --color-salvia-500: #5a9a66;
+  --color-salvia-600: #457d51;
+  --color-salvia-700: #376443;
+  --color-salvia-800: #2c4f36;
+
+  --color-laranja-100: #fdf0e3;
+  --color-laranja-300: #f5c48c;
+  --color-laranja-400: #efa658;
+  --color-laranja-500: #e68a2f;
+  --color-laranja-600: #cf7322;
+
+  --color-amarelo-100: #fdf6dd;
+  --color-amarelo-300: #f2dd8e;
+  --color-amarelo-500: #d9b326;
+  --color-amarelo-700: #8a7115;
+
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+}
+
+:root {
+  --ocupado-fundo: #0f424a;
+  --ocupado-texto: #ffffff;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-white text-slate-700 antialiased;
+}
+
+/* Focus visível para navegação por teclado (acessibilidade) */
+:focus-visible {
+  outline: 3px solid #2e7f89;
+  outline-offset: 2px;
+}
+
+/* Legenda / células da agenda */
+.slot {
+  @apply flex min-h-11 items-center justify-center rounded-md border text-xs font-semibold transition-colors;
+}
+.slot-livre {
+  @apply border-slate-200 bg-white text-slate-500 hover:border-petroleo-400 hover:bg-petroleo-50;
+}
+.slot-ocupado {
+  @apply border-petroleo-800 bg-petroleo-700 text-white cursor-not-allowed;
+}
+.slot-fixo {
+  @apply border-petroleo-800 bg-petroleo-700 text-white cursor-not-allowed;
+}
+.slot-avulso {
+  @apply border-salvia-700 bg-salvia-600 text-white cursor-not-allowed;
+}
+.slot-reposicao {
+  @apply border-laranja-600 bg-laranja-500 text-white cursor-not-allowed;
+}
+.slot-pendente {
+  @apply border-amarelo-700 bg-amarelo-300 text-slate-900 cursor-not-allowed;
+}
+.slot-cancelado {
+  @apply border-dashed border-slate-300 bg-slate-100 text-slate-400 line-through cursor-not-allowed;
+}
+
+.card {
+  @apply rounded-xl border border-slate-200 bg-white shadow-sm;
+}
+
+.btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50;
+}
+/* Nota: no Tailwind v4 não se usa @apply com classes customizadas
+   (ex.: @apply btn). Cada variante repete as utilities base do botão. */
+.btn-primario {
+  @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50;
+  @apply bg-petroleo-700 text-white hover:bg-petroleo-800;
+}
+.btn-secundario {
+  @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50;
+  @apply border border-slate-300 bg-white text-slate-700 hover:bg-slate-50;
+}
+.btn-perigo {
+  @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50;
+  @apply bg-red-700 text-white hover:bg-red-800;
+}
+
+.campo {
+  @apply w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800 placeholder:text-slate-400 focus:border-petroleo-500 focus:outline-none;
+}
+.rotulo {
+  @apply mb-1 block text-sm font-medium text-slate-700;
+}
