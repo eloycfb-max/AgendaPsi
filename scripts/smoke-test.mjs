@@ -68,13 +68,24 @@ function check(nome, cond, detalhe = "") {
   }
 }
 
-const hoje = new Date().toISOString().slice(0, 10);
+/** Data local YYYY-MM-DD. toISOString() usa UTC e erra depois das 21h em Brasília. */
+const isoLocal = (d) =>
+  `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+/** Soma dias a uma data "YYYY-MM-DD" mantendo o dia no fuso local. */
+const addDiasIso = (base, dias) => {
+  const [y, m, d] = base.split("-").map(Number);
+  const dt = new Date(y, m - 1, d);
+  dt.setDate(dt.getDate() + dias);
+  return isoLocal(dt);
+};
+
+const hoje = isoLocal(new Date());
 function proximo(weekday) {
   // data futura com o weekday desejado (0=dom..6=sat)
   const d = new Date();
   d.setDate(d.getDate() + 7);
   while (d.getDay() !== weekday) d.setDate(d.getDate() + 1);
-  return d.toISOString().slice(0, 10);
+  return isoLocal(d);
 }
 const seg = proximo(1);
 
@@ -122,7 +133,7 @@ console.log("\n== CA-002: domingo bloqueado ==");
   const domingo = (() => {
     const d = new Date();
     d.setDate(d.getDate() + 7 - d.getDay()); // próximo domingo
-    return d.toISOString().slice(0, 10);
+    return isoLocal(d);
   })();
   const r = await req("POST", "/api/admin/reservas", {
     consultorio_id: 1,
@@ -189,11 +200,7 @@ let recId;
   check("criar recorrência ter 09h", r.status === 201, JSON.stringify(r.json));
   recId = r.json?.id;
 
-  const seg2 = (() => {
-    const d = new Date(seg);
-    d.setDate(d.getDate() + 7);
-    return d.toISOString().slice(0, 10);
-  })();
+  const seg2 = addDiasIso(seg, 7);
   const r2 = await req("POST", "/api/admin/recorrencias", {
     consultorio_id: 3,
     profissional_id: profId,
@@ -212,9 +219,7 @@ let recId;
     inicio: 14,
   });
   check("avulsa criada", avulsa.status === 201);
-  const seg3 = new Date(seg);
-  seg3.setDate(seg3.getDate() + 7);
-  const seg3Iso = seg3.toISOString().slice(0, 10);
+  const seg3Iso = addDiasIso(seg, 7);
   const repete = await req("POST", "/api/admin/reservas", {
     consultorio_id: 1,
     profissional_id: profId,
@@ -235,11 +240,7 @@ console.log("\n== CA-013: liberar ocorrência da série ==");
   const dia = sala3?.dias?.find((d) => d.data === ter);
   const slot = dia?.horarios?.find((h) => h.hora === 9);
   check("ocorrência liberada fica livre", slot?.status === "livre", JSON.stringify(slot));
-  const demais = (() => {
-    const d = new Date(ter);
-    d.setDate(d.getDate() + 7);
-    return d.toISOString().slice(0, 10);
-  })();
+  const demais = addDiasIso(ter, 7);
   const av2 = await req("GET", `/api/public/availability?inicio=${demais}&dias=7`);
   const s2 = av2.json?.consultorios?.find((c) => c.id === 3);
   const d2 = s2?.dias?.find((d) => d.data === demais);

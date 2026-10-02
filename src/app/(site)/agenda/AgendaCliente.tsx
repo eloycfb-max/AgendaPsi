@@ -336,7 +336,8 @@ export function AgendaCliente() {
             <div>
               <p className="font-semibold text-slate-900">Não foi possível carregar a agenda.</p>
               <p className="mt-1 text-sm text-slate-700">
-                Confira sua conexão com a internet e tente novamente.
+                Confira sua conexão com a internet — a agenda refaz a busca sozinha a cada 10
+                segundos.
               </p>
             </div>
             <button

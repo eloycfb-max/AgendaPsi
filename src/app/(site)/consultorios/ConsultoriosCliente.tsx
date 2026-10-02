@@ -106,8 +106,8 @@ export function ConsultoriosCliente() {
   const [estado, setEstado] = useState<EstadoConsultorios>("carregando");
   const [consultorios, setConsultorios] = useState<ConsultorioPublico[]>([]);
 
-  const carregar = useCallback(async () => {
-    setEstado("carregando");
+  const carregar = useCallback(async (silencioso = false) => {
+    if (!silencioso) setEstado("carregando");
     try {
       const resposta = await fetch("/api/public/rooms", { cache: "no-store" });
       if (!resposta.ok) throw new Error("Resposta inválida da API.");
@@ -124,6 +124,14 @@ export function ConsultoriosCliente() {
   useEffect(() => {
     void carregar();
   }, [carregar]);
+
+  // Falha transitória não fica presa na tela: em erro, refaz a carga a cada 8 s
+  // até conseguir (o estado "erro" não muda, então o intervalo segue ativo).
+  useEffect(() => {
+    if (estado !== "erro") return;
+    const intervalo = window.setInterval(() => void carregar(true), 8000);
+    return () => window.clearInterval(intervalo);
+  }, [estado, carregar]);
 
   if (estado === "carregando") {
     return (
@@ -154,7 +162,8 @@ export function ConsultoriosCliente() {
           <div>
             <p className="font-semibold text-slate-900">Não foi possível carregar os consultórios.</p>
             <p className="mt-1 text-sm text-slate-700">
-              Confira sua conexão com a internet e tente novamente.
+              Confira sua conexão com a internet — a página tenta carregar de novo sozinha em
+              alguns segundos.
             </p>
           </div>
           <button
