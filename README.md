@@ -97,6 +97,10 @@ Frequência recomendada: diária ou semanal, conforme a criticidade — document
 
 ## 7. Publicação
 
+> 🚀 **Guia completo e gratuito (Oracle Cloud Always Free, passo a passo):**
+> [`docs/DEPLOY.md`](docs/DEPLOY.md) — publica o site com URL permanente,
+> backup automático e HTTPS opcional, sem mudar código.
+
 1. `npm run build && npm run start` em hospedagem com Node 24+ (VPS, Render, Railway, Fly.io etc.).
 2. Definir variáveis: `ADMIN_SENHA_INICIAL` (apenas no primeiro boot) e, opcionalmente, `NODE_ENV=production`.
 3. URL pública permanente = endereço do site; URL administrativa = `/login`.
